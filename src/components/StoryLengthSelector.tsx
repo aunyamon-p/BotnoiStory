@@ -19,10 +19,12 @@ export const StoryLengthSelector: React.FC<StoryLengthSelectorProps> = ({
   selectedLanguage = 'Thai',
 }) => {
   return (
-    <Box background="neutralLow" borderRadius="standard" padding="2u">
+    <Box borderRadius="standard" padding="1u">
       <Rows spacing="3u">
         <Box>
-          <Text variant="bold">Length of story</Text>
+          <Box paddingBottom="1u">
+            <Text variant="bold">Length of story</Text>
+          </Box>
           <Columns spacing="1u">
             <Button
               variant={selectedLength === '15s' ? 'primary' : 'secondary'}
@@ -48,8 +50,10 @@ export const StoryLengthSelector: React.FC<StoryLengthSelectorProps> = ({
           </Columns>
         </Box>
 
-        <Box>
-          <Text variant="bold" size="small">Language output</Text>
+        <Box >
+          <Box paddingBottom="1u">
+            <Text variant="bold">Language output</Text>
+          </Box>
           <Select
             value={selectedLanguage}
             onChange={onLanguageSelect}

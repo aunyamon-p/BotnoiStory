@@ -1,78 +1,108 @@
-import React, { useState } from "react";
-import { Button, Text, TextInput, Box } from "@canva/app-ui-kit";
-import { useIntl, FormattedMessage } from "react-intl";
+import { useState } from "react";
+import {
+  Box,
+  Button,
+  FormField,
+  MultilineInput,
+  Text,
+} from "@canva/app-ui-kit";
+import { useIntl } from "react-intl";
+import "styles/components.css";
 
-export default function CharacterForm() {
-  const [characters, setCharacters] = useState<string[]>([]);
-  const [input, setInput] = useState("");
+/* ---------------------- CharacterInput ---------------------- */
+type CharacterInputProps = {
+  value: string;
+  onChange: (value: string) => void;
+  onAddCharacter: () => void;
+  label?: string;
+};
+
+const CharacterInput = ({
+  value,
+  onChange,
+  onAddCharacter,
+  label,
+}: CharacterInputProps) => {
   const intl = useIntl();
+  const MAX_INPUT_LENGTH = 300;
 
-  const addCharacter = () => {
-    if (input.trim() && input.length <= 300) {
-      setCharacters([...characters, input.trim()]);
-      setInput("");
-    }
+  return (
+    <>
+      <FormField 
+        label={
+          label ||
+          intl.formatMessage({
+            defaultMessage: "Character",
+            description: "Label for character input",
+          })
+        }
+        value={value}
+        control={(props) => (
+          <MultilineInput
+            {...props}
+            placeholder={intl.formatMessage({
+              defaultMessage: "Type something...",
+            })}
+            onChange={onChange}
+            maxLength={MAX_INPUT_LENGTH}
+            minRows={3}
+            footer={
+              <Box padding="1u" display="flex" justifyContent="end">
+                <Text size="small">
+                  {value.length}/{MAX_INPUT_LENGTH}
+                </Text>
+              </Box>
+            }
+            required
+          />
+        )}
+      />
+
+      <Box display="flex" justifyContent="center" paddingTop="1u">
+        <Button
+            variant="primary"
+            onClick={onAddCharacter}
+        >
+            {intl.formatMessage({
+            defaultMessage: "+ Add character",
+            })}
+        </Button>
+     </Box>
+    </>
+  );
+};
+
+/* ---------------------- CharacterSection ---------------------- */
+export const CharacterSection = () => {
+  const [characterInputs, setCharacterInputs] = useState<string[]>([""]);
+  const [characters, setCharacters] = useState<string[]>([]);
+
+  const handleInputChange = (index: number, value: string) => {
+    const updated = [...characterInputs];
+    updated[index] = value;
+    setCharacterInputs(updated);
+  };
+
+  const handleAddCharacter = (index: number) => {
+    const newChar = characterInputs[index].trim();
+    if (!newChar) return;
+
+    setCharacters((prev) => [...prev, newChar]);
+    setCharacterInputs((prev) => [...prev, ""]); // เพิ่มช่องใหม่
   };
 
   return (
-    <Box padding="2u">
-      <Text variant="regular">
-        <FormattedMessage
-          defaultMessage="Describe your character"
-          description="Prompt for user to describe their character"
-        />
-      </Text>
-
-      <TextInput
-        placeholder={intl.formatMessage({
-          defaultMessage: "Type something...",
-          description: "Placeholder text for character description input",
-        })}
-        value={input}
-        onChange={(value: string) => setInput(value)}
-      />
-
-      <Text variant="regular" tone="secondary">
-        <FormattedMessage
-          defaultMessage="{currentLength}/300 characters"
-          description="Shows the current character count out of 300"
-          values={{ currentLength: input.length }}
-        />
-      </Text>
-
-      <Button
-        variant="primary"
-        stretch
-        onClick={addCharacter}
-        disabled={input.trim().length === 0}
-      >
-        {/* แก้ไขให้ใช้ intl.formatMessage เพื่อคืนค่าเป็น string สำหรับ children ของ Button */}
-        {intl.formatMessage({
-          defaultMessage: "Add character",
-          description: "Button to add a character",
-        })}
-      </Button>
-
-      {characters.length > 0 && (
-        <Box padding="2u">
-          <Text variant="bold">
-            <FormattedMessage
-              defaultMessage="Added characters:"
-              description="Heading for the list of added characters"
-            />
-          </Text>
-          {characters.map((char, i) => (
-            <Box
-              key={i}
-              padding="1u"
-              borderRadius="standard"
-              background="neutralLow"
-            >
-              <Text>{char}</Text>
-            </Box>
-          ))}
+    <Box>
+      {characterInputs.map((val, i) => (
+        <Box key={i} paddingTop={i === 0 ? undefined : "2u"}>
+          <CharacterInput
+            value={val}
+            onChange={(v) => handleInputChange(i, v)}
+            onAddCharacter={() => handleAddCharacter(i)}
+            label={`Character ${i + 1}`}
+          />
         </Box>
-      )}
+      ))}
     </Box>
   );
-}
+};
