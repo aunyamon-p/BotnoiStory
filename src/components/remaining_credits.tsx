@@ -3,8 +3,6 @@ import { requestOpenExternalUrl } from "@canva/platform";
 import { useAppContext } from "src/context";
 import { FormattedMessage, useIntl } from "react-intl";
 
-// @TODO: Replace this URL with your custom upselling link.
-const PURCHASE_URL = "https://example.com";
 
 export const RemainingCredits = (): JSX.Element | undefined => {
   const { remainingCredits, loadingApp } = useAppContext();
@@ -17,11 +15,8 @@ export const RemainingCredits = (): JSX.Element | undefined => {
     return (
       <Text alignment="center" size="small">
         {remainingCredits > 0 ? (
-          <FormattedMessage
-            defaultMessage="Use <strong>1 of {remainingCredits, number}</strong> {remainingCredits, plural,
-            one {credit}
-            other {credits}
-            }."
+           <FormattedMessage
+            defaultMessage="<strong>Use 1 of {remainingCredits, number} {remainingCredits, plural, one {credit} other {Botnoi points}}.</strong>"
             description="A message to indicate the number of credits, of their total remaining credits, that will be used when generating an image"
             values={{
               remainingCredits,
@@ -30,7 +25,7 @@ export const RemainingCredits = (): JSX.Element | undefined => {
           />
         ) : (
           <FormattedMessage
-            defaultMessage="No credits remaining."
+            defaultMessage="No points remaining."
             description="A message to indicate that there are no credits available to be used"
           />
         )}
@@ -50,25 +45,9 @@ export const RemainingCredits = (): JSX.Element | undefined => {
     <Rows spacing="0">
       <RemainingCreditsText />
       <Text alignment="center" size="small">
-        <FormattedMessage
-          defaultMessage="Purchase more credits at <link>example.com</link>."
-          description="A message to prompt the user to purchase more credits. Do not translate <link>example.com</link>."
-          values={{
-            link: (chunks) => (
-              <Link
-                href={PURCHASE_URL}
-                requestOpenExternalUrl={() => openExternalUrl(PURCHASE_URL)}
-                title={intl.formatMessage({
-                  defaultMessage: "Example Co. website",
-                  description:
-                    "A title for a link to the website of Example Co.",
-                })}
-              >
-                {chunks}
-              </Link>
-            ),
-          }}
-        />
+        <FormattedMessage defaultMessage="Points are used for generating text and audio."/>
+        <br/>
+        <FormattedMessage defaultMessage="Each character in generated audio uses 1 point."/>
       </Text>
     </Rows>
   );

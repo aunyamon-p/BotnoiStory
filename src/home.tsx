@@ -4,6 +4,7 @@ import { Footer } from "./components";
 import { StoryLengthSelector } from "./components";
 import * as styles from "styles/components.css";
 import { useIntl, FormattedMessage } from "react-intl";
+import { Outlet } from "react-router-dom";
 
 const CharacterForm = () => {
   const [characters, setCharacters] = useState<string[]>([]);
@@ -180,6 +181,7 @@ export const Home = () => {
   return (
     <div className={styles.scrollContainer}>
       <Rows spacing="3u">
+        <Outlet />
         <Tabs>
           <Tab
             active={activeTab === 'create'}
