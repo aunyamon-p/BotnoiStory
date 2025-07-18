@@ -4,8 +4,8 @@ import {
   Box,
   Button,
   FormField,
-  LightBulbIcon,
   MultilineInput,
+  Text,
 } from "@canva/app-ui-kit";
 import { useAppContext } from "src/context";
 import { Paths } from "src/routes";
@@ -13,7 +13,7 @@ import { PromptInputMessages as Messages } from "./prompt_input.messages";
 import { useIntl } from "react-intl";
 
 // @TODO: Adjust according to your specific requirements.
-const MAX_INPUT_LENGTH = 280;
+const MAX_INPUT_LENGTH = 200;
 const MIN_INPUT_ROWS = 3;
 
 /**
@@ -23,26 +23,26 @@ const MIN_INPUT_ROWS = 3;
  * the specific implementation or API used.
  */
 const examplePrompts: string[] = [
-  "Cats ruling a parallel universe",
-  "Futuristic city with friendly robots",
-  "Magical forest with unicorns and dragons",
-  "Underwater kingdom with colorful fish and mermaids",
-  "World with altered gravity and flying people",
-  "Alien landscape with strange creatures",
-  "Steampunk adventure on a giant airship",
-  "Whimsical tea party with talking animals",
-  "Cyberpunk cityscape with neon lights",
-  "Post-apocalyptic world reclaimed by nature",
-  "Magical library where books come to life",
-  "Space station orbiting a distant planet",
-  "Time-traveling adventure through historical eras",
-  "Enchanted garden where flowers sing and dance",
-  "Fantasy castle floating among clouds",
-  "Fairytale scene with magical objects",
-  "Cosmic journey through distant galaxies",
-  "World where every day is Halloween",
-  "Futuristic sports arena with cyborgs",
-  "Scene inspired by a classic myth or legend",
+  "Sharing is caring",
+  "Kindness can change the world",
+  "Honesty is the best policy",
+  "Courage conquers fear",
+  "Friendship is a treasure",
+  "Hard work leads to success",
+  "Believe in yourself",
+  "Helping others brings happiness",
+  "Patience is a virtue",
+  "Teamwork makes the dream work",
+  "Never judge by appearances",
+  "Be grateful for what you have",
+  "Love conquers all",
+  "Learning from mistakes",
+  "Bravery in the face of challenges",
+  "The power of forgiveness",
+  "Respect nature and all living things",
+  "Small acts of kindness matter",
+  "Hope shines in the darkest times",
+  "Dream big and never give up",
 ];
 
 /**
@@ -72,37 +72,35 @@ export const PromptInput = () => {
   const { pathname } = useLocation();
   const isHomeRoute = pathname === Paths.HOME;
   const { promptInput, setPromptInput, promptInputError } = useAppContext();
-  const [showInspireMeButton, setShowInspireMeButton] = useState(true);
-  const [inspireMeButtonLabel, setInspireMeButtonLabel] = useState(
-    intl.formatMessage(Messages.promptInspireMe),
-  );
+  const [hasUsedInspire, setHasUsedInspire] = useState(false);
 
   const onInspireClick = () => {
     setPromptInput(generateExamplePrompt(promptInput));
-    setInspireMeButtonLabel(intl.formatMessage(Messages.promptTryAnother));
+    setHasUsedInspire(true);
   };
 
   const onPromptInputChange = (value: string) => {
-    setShowInspireMeButton(false);
     setPromptInput(value);
+
   };
 
   const InspireMeButton = () => {
     return (
-      <Button variant="secondary" icon={LightBulbIcon} onClick={onInspireClick}>
-        {inspireMeButtonLabel}
+      <Button variant="secondary" onClick={onInspireClick}>
+        {hasUsedInspire
+          ? intl.formatMessage(Messages.promptTryAnother)
+          : intl.formatMessage(Messages.promptInspireMe)}
       </Button>
     );
   };
 
   const onClearClick = () => {
     setPromptInput("");
-    setShowInspireMeButton(true);
-    setInspireMeButtonLabel(intl.formatMessage(Messages.promptInspireMe));
+    setHasUsedInspire(false);
   };
 
   const ClearButton = () => (
-    <Button variant="tertiary" onClick={onClearClick}>
+    <Button variant="tertiary" onClick={onClearClick} >
       {intl.formatMessage({
         defaultMessage: "Clear",
         description:
@@ -114,9 +112,9 @@ export const PromptInput = () => {
   return (
     <FormField
       label={intl.formatMessage({
-        defaultMessage: "Describe what you want to create",
+        defaultMessage: "Moral of the story",
         description:
-          "A label for the input field to describe what the user wants to create",
+          "Label for the input field where users enter the moral lesson or main message of their story",
       })}
       error={promptInputError}
       value={promptInput}
@@ -124,9 +122,9 @@ export const PromptInput = () => {
         <MultilineInput
           {...props}
           placeholder={intl.formatMessage({
-            defaultMessage: "Enter 5+ words to describe...",
+            defaultMessage: "Type the moral lesson of story. For example, sharing is caring",
             description:
-              "A placeholder for the input field where the user can describe what they want the AI image generator to create, encouraging them to use a longer, more descriptive phrase. The number of words is not validated, but a longer text will likely improve the quality of the results. Feel free to translate loosely or idiomatically.",
+              "Placeholder text encouraging users to type the moral lesson or key message from the story they want to create. This helps guide users to provide meaningful input for story generation.",
           })}
           onChange={onPromptInputChange}
           maxLength={MAX_INPUT_LENGTH}
@@ -135,12 +133,21 @@ export const PromptInput = () => {
             <Box
               padding="1u"
               display="flex"
-              justifyContent={
-                isHomeRoute && showInspireMeButton ? "spaceBetween" : "end"
-              }
+              justifyContent="spaceBetween"
+              alignItems="end"
             >
-              {isHomeRoute && showInspireMeButton && <InspireMeButton />}
-              {promptInput && <ClearButton />}
+              {/* Left: Inspire me button */}
+              {isHomeRoute && <InspireMeButton />}
+
+              {/* Right: counter above Clear button */}
+              <Box display="flex" flexDirection="column" alignItems="end">
+                <Box paddingBottom="0.5u">
+                  <Text size="small">
+                    {promptInput.length}/{MAX_INPUT_LENGTH}
+                  </Text>
+                </Box>
+                <ClearButton />
+              </Box>
             </Box>
           }
           required={true}

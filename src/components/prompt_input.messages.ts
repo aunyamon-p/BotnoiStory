@@ -5,10 +5,10 @@ export const PromptInputMessages = defineMessages({
   promptInspireMe: {
     defaultMessage: "Inspire me",
     description:
-      "A button label to generate a prompt automatically, which may inspire the user to write their own",
+      "Button label to generate an example moral lesson to inspire the user",
   },
   promptTryAnother: {
     defaultMessage: "Try another",
-    description: "A button label to try another image generation prompt",
+    description: "Button label to generate a different example moral lesson",
   },
 });
