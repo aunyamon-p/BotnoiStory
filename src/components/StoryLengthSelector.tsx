@@ -56,7 +56,6 @@ export const StoryLengthSelector: React.FC<StoryLengthSelectorProps> = ({
             options={[
               { value: 'Thai', label: 'Thai' },
               { value: 'English', label: 'English' },
-              // เพิ่มภาษาอื่นๆ ได้ที่นี่
             ]}
             stretch
           />

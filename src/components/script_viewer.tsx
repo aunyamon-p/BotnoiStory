@@ -51,7 +51,7 @@ export const ScriptViewer = ({
               onChange={handleScriptChange}
             />
           </div>
-          
+        
           {/* Character counter */}
           <Box paddingTop="1u">
             <Text variant="regular" tone="tertiary" size="small">

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Rows, Tabs, Tab, Box, Button, Text, TextInput } from "@canva/app-ui-kit";
 import { Footer } from "./components";
-import { StoryLengthSelector } from "./components";
+import { StoryLengthSelector , SelectSpeaker } from "./components";
 import * as styles from "styles/components.css";
 import { useIntl, FormattedMessage } from "react-intl";
 import { Outlet } from "react-router-dom";
@@ -214,13 +214,19 @@ export const Home = () => {
         )}
 
         {activeTab === 'script' && (
+          <Box>
           <ScriptViewer 
             onBackToEdit={() => setActiveTab('create')}
             initialScript={scriptContent}
             onScriptChange={setScriptContent}
           />
+          <SelectSpeaker/>
+          </Box>
+          
         )}
-
+        
+        
+        {/* Footer */}
         <Footer />
       </Rows>
     </div>
