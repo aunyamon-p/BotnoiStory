@@ -4,9 +4,15 @@ import {
   Select,
   AudioCard,
   Text,
-  AudioContextProvider
+  AudioContextProvider,
+  Rows,
+  Button,
+  ReloadIcon
 } from "@canva/app-ui-kit";
 import { useIntl } from "react-intl";
+import { useAppContext } from "src/context";
+import { useNavigate } from "react-router-dom";
+import { Paths } from "src/routes";
 
 interface Speaker {
   id: string;
@@ -49,6 +55,8 @@ const sampleSpeakers: Speaker[] = [
 ];
 
 export const SelectSpeaker = () => {
+  const navigate = useNavigate();
+  const { setPromptInput } = useAppContext();
   const [selectedSpeakerId, setSelectedSpeakerId] = useState<string | undefined>(undefined);
   const intl = useIntl();
 
@@ -62,9 +70,21 @@ export const SelectSpeaker = () => {
 
   const selectedSpeaker = sampleSpeakers.find(speaker => speaker.id === selectedSpeakerId);
 
+  const handleAddVoiceOver = () => {
+    if (selectedSpeaker) {
+      console.log(`Adding voice over with speaker: ${selectedSpeaker.name}`);
+      // Logic to add voice over to design
+    }
+  };
+
+  const handleStartNewStory = () => {
+    setPromptInput("");
+    navigate(Paths.HOME);
+  };
+
   return (
-    <Box padding="2u" background="neutralLow" borderRadius="standard">
-      <Text variant="bold" size="small">Select a Speaker</Text>
+    <Rows spacing="1u">
+      <Text variant="bold">Select a Speaker</Text>
       <Select
         options={speakerOptions}
         value={selectedSpeakerId}
@@ -75,7 +95,7 @@ export const SelectSpeaker = () => {
 
       <AudioContextProvider>
       {selectedSpeaker && (
-        <Box paddingTop="2u">
+        <Rows spacing="2u">
           <AudioCard
             audioPreviewUrl={selectedSpeaker.sampleAudioUrl}
             title={`${selectedSpeaker.name} ${selectedSpeaker.premium ? 'Premium' : ''}`}
@@ -84,9 +104,31 @@ export const SelectSpeaker = () => {
             ariaLabel={`Audio preview for ${selectedSpeaker.name}`}
             durationInSeconds={86}
           />
-        </Box>
+        </Rows>
       )}
       </AudioContextProvider>
-    </Box>
-  );
+
+      <Box paddingTop="1u">
+        <Rows spacing="1u">
+          <Button 
+          variant="primary" 
+          onClick={handleAddVoiceOver} 
+          disabled={!selectedSpeakerId}
+          stretch
+          >
+            Add voice over to design 
+          </Button>
+          <Button 
+            variant="secondary" 
+            onClick={handleStartNewStory} 
+            stretch
+            >  
+            {intl.formatMessage({
+            defaultMessage: "Start new story",
+            })}
+          </Button>
+        </Rows>
+      </Box>
+    </Rows>
+);
 };

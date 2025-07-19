@@ -1,5 +1,14 @@
 import React from 'react';
-import { Button, Text, Select, Box, Columns, Rows } from "@canva/app-ui-kit";
+import {
+  Button,
+  Select,
+  Box,
+  Rows,
+  FormField,
+  SegmentedControl,
+  ReloadIcon
+} from "@canva/app-ui-kit";
+import { useIntl } from "react-intl";
 
 interface StoryLengthSelectorProps {
   onLengthSelect: (length: '15s' | '30s' | '60s') => void;
@@ -15,58 +24,57 @@ export const StoryLengthSelector: React.FC<StoryLengthSelectorProps> = ({
   onLanguageSelect,
   onCreateStory,
   onReset,
-  selectedLength,
+  selectedLength = '30s',
   selectedLanguage = 'Thai',
 }) => {
+  const intl = useIntl();
   return (
-    <Box background="neutralLow" borderRadius="standard" padding="2u">
-      <Rows spacing="3u">
-        <Box>
-          <Text variant="bold">Length of story</Text>
-          <Columns spacing="1u">
-            <Button
-              variant={selectedLength === '15s' ? 'primary' : 'secondary'}
-              onClick={() => onLengthSelect('15s')}
-              stretch
-            >
-              ~15s
-            </Button>
-            <Button
-              variant={selectedLength === '30s' ? 'primary' : 'secondary'}
-              onClick={() => onLengthSelect('30s')}
-              stretch
-            >
-              ~30s
-            </Button>
-            <Button
-              variant={selectedLength === '60s' ? 'primary' : 'secondary'}
-              onClick={() => onLengthSelect('60s')}
-              stretch
-            >
-              ~60s
-            </Button>
-          </Columns>
-        </Box>
+    <Box borderRadius="standard">
+      <Rows spacing="2u">
+        <FormField
+          label="Length of story"
+          control={() => (
+            <SegmentedControl
+              value={selectedLength}
+              onChange={(val) => onLengthSelect(val as '15s' | '30s' | '60s')}
+              options={[
+                { value: '15s', label: '~15s' },
+                { value: '30s', label: '~30s' },
+                { value: '60s', label: '~60s' },
+              ]}
+             
+            />
+          )}
+        />
 
-        <Box>
-          <Text variant="bold" size="small">Language output</Text>
-          <Select
-            value={selectedLanguage}
-            onChange={onLanguageSelect}
-            options={[
-              { value: 'Thai', label: 'Thai' },
-              { value: 'English', label: 'English' },
-            ]}
-            stretch
-          />
-        </Box>
+        <FormField
+          label="Language output"
+          control={() => (
+            <Select
+              value={selectedLanguage}
+              onChange={onLanguageSelect}
+              options={[
+                { value: 'Thai', label: 'Thai' },
+                { value: 'English', label: 'English' },
+              ]}
+              stretch
+            />
+          )}
+        />
 
         <Rows spacing="1u">
           <Button variant="primary" onClick={onCreateStory} stretch>
             Create story
           </Button>
-          <Button variant="secondary" onClick={onReset} stretch>
-            Reset input
+          <Button 
+            icon={() => <ReloadIcon />}
+            variant="secondary" 
+            onClick={onReset} 
+            stretch
+          >
+            {intl.formatMessage({
+            defaultMessage: "Reset"
+          })}
           </Button>
         </Rows>
       </Rows>

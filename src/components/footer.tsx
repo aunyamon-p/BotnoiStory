@@ -1,6 +1,6 @@
 import { useNavigate, useLocation} from "react-router-dom";
 import { useState } from "react";
-import { Rows,Button,Text,CopyIcon } from "@canva/app-ui-kit";
+import { Rows,Button,Text,CopyIcon,Box } from "@canva/app-ui-kit";
 import { requestOpenExternalUrl } from "@canva/platform";
 import { purchaseCredits } from "src/api";
 import { RemainingCredits } from "src/components";
@@ -98,7 +98,9 @@ export const Footer = () => {
             </Button>
           ),
       )}
-        <Text size="small" alignment="center">
+      <Box paddingTop="2u">
+        <Rows spacing="1u">
+        <Text size="small" alignment="center" >
             {intl.formatMessage(Messages.userID)}: {userId.length > 19 ? `${userId.slice(0, 19)}...` : userId}
         </Text>
         <Button
@@ -107,8 +109,10 @@ export const Footer = () => {
           stretch={false}
           icon={() => <CopyIcon />}
           >
-          {copied ? "Copied" : "Copy"}
+          {copied ? "Copied UID" : "Copy UID"}
         </Button>
+        </Rows>
+        </Box>
     </Rows>
   );
 };

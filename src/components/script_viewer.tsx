@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { 
+import {
   Box,
   Button,
   Text,
-  TextInput,
-  FormField
+  FormField,
+  MultilineInput,
+  Column,
+  ArrowLeftIcon,
+  Rows
 } from "@canva/app-ui-kit";
-import * as styles from "styles/components.css";
 import { useIntl } from "react-intl";
+
 
 interface ScriptViewerProps {
   onBackToEdit: () => void;
@@ -15,10 +18,11 @@ interface ScriptViewerProps {
   onScriptChange?: (script: string) => void;
 }
 
-export const ScriptViewer = ({ 
-  onBackToEdit, 
-  initialScript = "", 
-  onScriptChange 
+
+export const ScriptViewer = ({
+  onBackToEdit,
+  initialScript = "",
+  onScriptChange,
 }: ScriptViewerProps) => {
   const [script, setScript] = useState(initialScript);
   const MAX_CHARS = 1000;
@@ -32,48 +36,47 @@ export const ScriptViewer = ({
   };
 
   return (
-    <div className={styles.scrollContainer}>
-      <Box padding="2u">
-        {/* Header - ตัวใหญ่เหมือนตัวอย่าง */}
-        <Text variant="bold" size="large" alignment="start">
-          Script
-        </Text>
+    <Box padding="0">
+      <Button
+        alignment="start"
+        variant="tertiary"
+        onClick={onBackToEdit}
+        icon={() => <ArrowLeftIcon />}
+        iconPosition="start"
+      >
+        {intl.formatMessage({
+          defaultMessage: "Back to edit prompt",
+          description: "Back button text",
+        })}
+      </Button>
+      
 
-        {/* Script Input - ปรับขนาดตัวอักษรให้ใหญ่ชัดเจน */}
-        <Box paddingTop="1u">
-          <div style={{ fontSize: '1.3rem' }}> {/* ตัวใหญ่ขึ้น 10% */}
-            <TextInput
-              placeholder={intl.formatMessage({
-                defaultMessage: "Type your script here...",
-                description: "Placeholder for script input"
-              })}
-              value={script}
-              onChange={handleScriptChange}
-            />
-          </div>
-        
-          {/* Character counter */}
-          <Box paddingTop="1u">
-            <Text variant="regular" tone="tertiary" size="small">
-              {script.length}/{MAX_CHARS} characters
-            </Text>
-          </Box>
-        </Box>
-
-        {/* Back Button */}
-        <Box paddingTop="2u">
-          <Button 
-            variant="secondary" 
-            onClick={onBackToEdit}
-            stretch
-          >
-            {intl.formatMessage({
-              defaultMessage: "Back to edit",
-              description: "Back button text"
+      <FormField
+        label={intl.formatMessage({
+          defaultMessage: "Script",
+          description: "Label for script input field",
+        })}
+        value={script}
+        control={(props) => (
+          <MultilineInput
+            {...props}
+            placeholder={intl.formatMessage({
+              defaultMessage: "Type your script here...",
+              description: "Placeholder for script input",
             })}
-          </Button>
-        </Box>
-      </Box>
-    </div>
+            onChange={handleScriptChange}
+            minRows={6}
+            maxLength={MAX_CHARS}
+            footer={
+              <Box padding="1u" display="flex" justifyContent="end">
+                <Text size="small" >
+                  {script.length}/{MAX_CHARS}
+                </Text>
+              </Box>
+            }
+          />
+        )}
+      />
+    </Box>
   );
 };
