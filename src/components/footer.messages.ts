@@ -5,25 +5,11 @@ import { defineMessages } from "react-intl";
 
 export const FooterMessages = defineMessages({
   /** Indicates actions users can take or instructions provided to the user. */
-  generateAgain: {
-    defaultMessage: "Generate again",
-    description:
-      "A button label to generate another image based on the previous prompt",
-  },
-  generateImage: {
-    defaultMessage: "Generate image",
-    description: "A button label to generate an image from a prompt",
-  },
   purchaseMoreCredits: {
-    defaultMessage: "Purchase more credits",
+    defaultMessage: "Purchase more point",
     description:
       "A button label to open a page where the user can purchase more credits",
   },
-  startOver: {
-    defaultMessage: "Start over",
-    description: "A button label to start the image generation process over",
-  },
-
   /** Messages related to handling errors that occur during operations. */
   appErrorGeneratingImagesFailed: {
     defaultMessage: "Generating images has failed, please try again.",
@@ -38,7 +24,7 @@ export const FooterMessages = defineMessages({
       "An error message to indicate that the user did not supply a prompt to generate an image, and this has to be provided before generating",
   },
   promptNoCreditsRemaining: {
-    defaultMessage: "No credits remaining.",
+    defaultMessage: "No points remaining.",
     description:
       "A message to indicate that the user has no credits remaining, and is unable to generate an image",
   },
@@ -48,4 +34,8 @@ export const FooterMessages = defineMessages({
     description:
       "An error message to indicate that the user typed something that may result in content that for example could be offensive or violent",
   },
+  userID: {
+    defaultMessage: "Your user ID is",
+    description: "A label for the user ID field in the footer",
+  }
 });

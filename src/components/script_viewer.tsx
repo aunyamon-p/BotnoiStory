@@ -6,6 +6,8 @@ import {
   FormField,
   MultilineInput,
   Column,
+  ArrowLeftIcon,
+  Rows
 } from "@canva/app-ui-kit";
 import { useIntl } from "react-intl";
 
@@ -34,26 +36,20 @@ export const ScriptViewer = ({
   };
 
   return (
-    <>
-          {/* Back Button */}
-      <Column>
-        <Button
-          variant="tertiary"
-          onClick={onBackToEdit}
-        >
-          ←
-        </Button>
-        
-        <Button
-          variant="tertiary"
-          onClick={onBackToEdit}
-        >
-          {intl.formatMessage({
-            defaultMessage: "Back to edit prompt",
-            description: "Back button text",
-          })}
-        </Button>
-      </Column>
+    <Box padding="0">
+      <Button
+        alignment="start"
+        variant="tertiary"
+        onClick={onBackToEdit}
+        icon={() => <ArrowLeftIcon />}
+        iconPosition="start"
+      >
+        {intl.formatMessage({
+          defaultMessage: "Back to edit prompt",
+          description: "Back button text",
+        })}
+      </Button>
+      
 
       <FormField
         label={intl.formatMessage({
@@ -69,7 +65,7 @@ export const ScriptViewer = ({
               description: "Placeholder for script input",
             })}
             onChange={handleScriptChange}
-            minRows={6} // ✅ ให้ดูเหมือน text editor
+            minRows={6}
             maxLength={MAX_CHARS}
             footer={
               <Box padding="1u" display="flex" justifyContent="end">
@@ -81,9 +77,6 @@ export const ScriptViewer = ({
           />
         )}
       />
-
-
-
-    </>
+    </Box>
   );
 };

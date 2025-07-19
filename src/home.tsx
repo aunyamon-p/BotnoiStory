@@ -1,18 +1,17 @@
-import { useState } from "react";
-import { Rows, Tabs, Tab, Box } from "@canva/app-ui-kit";
-import { StoryLengthSelector } from "./components";
+import { useState,useRef } from "react";
+import { Rows, Box } from "@canva/app-ui-kit";
+import { Footer, SelectSpeaker, StoryLengthSelector } from "./components";
 import * as styles from "styles/components.css";
-import { useIntl } from "react-intl";
-import { ScriptViewer } from "./components"; // ปรับ path ให้ตรงไฟล์จริง
+import { ScriptViewer } from "./components";
 import { Outlet } from "react-router-dom";
-import { CharacterSection } from "./components/character";
+import { CharacterSection } from "./components";
 
 export const Home = () => {
+  const scrollRef = useRef<HTMLDivElement>(null); 
   const [selectedLength, setSelectedLength] = useState<'15s' | '30s' | '60s'>('30s');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('Thai');
   const [activeTab, setActiveTab] = useState<'create' | 'script'>('create');
   const [scriptContent, setScriptContent] = useState("");
-  const intl = useIntl(); // ยังใช้อยู่ไหม? ถ้าไม่ใช้ ลบได้
 
   const handleLengthSelect = (length: '15s' | '30s' | '60s') => {
     setSelectedLength(length);
@@ -25,6 +24,7 @@ export const Home = () => {
   const handleCreateStory = () => {
     console.log("Create story with:", selectedLength, selectedLanguage);
     setActiveTab('script');
+    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleReset = () => {
@@ -33,33 +33,13 @@ export const Home = () => {
   };
 
   return (
-    <div className={styles.scrollContainer}>
-      <Rows spacing="3u">
-        {/* Tabs */}
-        <Tabs>
-          <Tab
-            active={activeTab === 'create'}
-            id="create"
-            onClick={() => setActiveTab('create')}
-          >
-            Create Story
-          </Tab>
-          <Tab
-            active={activeTab === 'script'}
-            id="script"
-            onClick={() => setActiveTab('script')}
-          >
-            Script View
-          </Tab>
-        </Tabs>
-
+    <div ref={scrollRef} className={styles.scrollContainer}>
+      <Rows spacing="2u">
         {activeTab === 'create' && (
-          <Box>
+          <Rows spacing="2u">
             {/* เดิมอยู่ข้างนอก ย้ายเข้ามาเพื่อไม่ให้ขึ้นใน Script */}
             <Outlet />
-
             <CharacterSection />
-
             <StoryLengthSelector
               onLengthSelect={handleLengthSelect}
               onLanguageSelect={handleLanguageSelect}
@@ -68,16 +48,20 @@ export const Home = () => {
               selectedLength={selectedLength}
               selectedLanguage={selectedLanguage}
             />
-          </Box>
+          </Rows>
         )}
 
         {activeTab === 'script' && (
+          <Rows spacing="2u">
           <ScriptViewer
             onBackToEdit={() => setActiveTab('create')}
             initialScript={scriptContent}
             onScriptChange={setScriptContent}
           />
+          <SelectSpeaker/>
+          </Rows>
         )}
+        <Footer />
       </Rows>
     </div>
   );

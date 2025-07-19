@@ -1,44 +1,29 @@
-// Comment for Footer Component
-// 1.ตรวจสอบสถานะก่อนทำงานสำคัญ ๆ
-// - ตรวจดูว่า ผู้ใช้ยังมี “เครดิต” (จำนวนครั้งที่ยังสร้างภาพได้) หรือไม่
-// - ตรวจสอบว่าผู้ใช้ได้กรอกข้อความคำอธิบาย (prompt) หรือยัง
-// - ตรวจสอบว่าข้อความคำอธิบายนั้นไม่มีคำหยาบหรือคำไม่เหมาะสม
-// 2.ปุ่มหลักที่แสดงใน Footer
-// - Generate Again / Generate Image ถ้าไม่มีเครดิต ปุ่มนี้จะไม่แสดง
-// - Purchase More Credits กรณีเครดิตหมด
-// - Start Over
-// 3.สถานะการโหลด
-// - ถ้ากำลังรอให้ระบบสร้างภาพ (โหลดอยู่) จะไม่แสดงปุ่มใดๆเลย
-// - แสดงจำนวนเครดิตคงเหลือ
-
-import { useNavigate, useLocation } from "react-router-dom";
-import { Rows, Button } from "@canva/app-ui-kit";
-import { queueImageGeneration, purchaseCredits } from "src/api";
+import { useNavigate, useLocation} from "react-router-dom";
+import { useState } from "react";
+import { Rows,Button,Text,CopyIcon,Box } from "@canva/app-ui-kit";
+import { requestOpenExternalUrl } from "@canva/platform";
+import { purchaseCredits } from "src/api";
 import { RemainingCredits } from "src/components";
-import { NUMBER_OF_IMAGES_TO_GENERATE } from "src/config";
 import { useAppContext } from "src/context";
 import { Paths } from "src/routes";
-import { getObsceneWords } from "src/utils";
 import { useIntl } from "react-intl";
 import { FooterMessages as Messages } from "./footer.messages";
+
 
 export const Footer = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isRootRoute = pathname === Paths.HOME;
   const {
-    setAppError,
-    promptInput,
     setPromptInput,
     setPromptInputError,
     loadingApp,
-    isLoadingImages,
-    setJobId,
-    setIsLoadingImages,
     remainingCredits,
     setRemainingCredits,
   } = useAppContext();
   const intl = useIntl();
+
+  const PURCHASE_URL = "https://voice.botnoi.ai/";
 
   const hasRemainingCredits = remainingCredits > 0;
 
@@ -52,53 +37,8 @@ export const Footer = () => {
     return true;
   };
 
-  const isPromptInputFilled = () => {
-    if (!promptInput) {
-      setPromptInputError(
-        intl.formatMessage(Messages.promptMissingErrorMessage),
-      );
-      return false;
-    }
-    return true;
-  };
-
-  const isPromptInputClean = () => {
-    const obsceneWords = getObsceneWords(promptInput);
-    if (obsceneWords.length > 0) {
-      setPromptInputError(
-        intl.formatMessage(Messages.promptObscenityErrorMessage),
-      );
-      return false;
-    }
-    return true;
-  };
- 
-  const onGenerateClick = async () => {
-    if (
-      !isCreditRemaining() ||
-      !isPromptInputFilled() ||
-      !isPromptInputClean()
-    ) {
-      return;
-    }
-
-    setIsLoadingImages(true);
-    try {
-      const { jobId } = await queueImageGeneration({
-        prompt: promptInput,
-        numberOfImages: NUMBER_OF_IMAGES_TO_GENERATE,
-      });
-
-      setJobId(jobId);
-    } catch {
-      setAppError(intl.formatMessage(Messages.appErrorGeneratingImagesFailed));
-    }
-    navigate(Paths.RESULTS);
-  };
-
   const onPurchaseMoreCredits = async () => {
     const { credits } = await purchaseCredits();
-
     setRemainingCredits(credits);
   };
 
@@ -109,33 +49,41 @@ export const Footer = () => {
 
   const footerButtons = [
     {
-      variant: "primary" as const,
-      onClick: onGenerateClick,
-      value: isRootRoute
-        ? intl.formatMessage(Messages.generateImage)
-        : intl.formatMessage(Messages.generateAgain),
-      visible: hasRemainingCredits,
-    },
-    {
-      variant: "primary" as const,
-      onClick: onPurchaseMoreCredits,
-      value: intl.formatMessage(Messages.purchaseMoreCredits),
-      visible: !hasRemainingCredits,
-    },
-    {
       variant: "secondary" as const,
-      onClick: reset,
-      value: intl.formatMessage(Messages.startOver),
-      visible: !isRootRoute,
-    },
+      // onClick: onPurchaseMoreCredits,
+      onClick: () => openExternalUrl(PURCHASE_URL),
+      value: intl.formatMessage(Messages.purchaseMoreCredits),
+      visible: isRootRoute,
+    }
   ];
 
-  if (isLoadingImages) {
-    return null;
-  }
+  //ต้องดึงมาจาก Botnoi Account
+  const userId = "VWNlNDgyYjczZTJhZGQ1MWJiODE2YzhlNzExYTdhZTA1NTYxODk0"
+  const [copied, setCopied] = useState(false);
+  const copyUserId = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    }catch (error) {
+      console.error("Failed to copy text: ", error);
+    }
+  };
 
+  const handleCopy = async () => {
+    await copyUserId(userId);
+    setCopied(true);
+    setTimeout(() => setCopied(false),1500);
+  };
+
+
+  const openExternalUrl = async (url: string) => {
+    await requestOpenExternalUrl({
+      url,
+    });
+  };
+  
   return (
     <Rows spacing="1u">
+      <RemainingCredits />
       {footerButtons.map(
         ({ visible, variant, onClick, value }) =>
           visible && (
@@ -150,7 +98,21 @@ export const Footer = () => {
             </Button>
           ),
       )}
-      <RemainingCredits />
+      <Box paddingTop="2u">
+        <Rows spacing="1u">
+        <Text size="small" alignment="center" >
+            {intl.formatMessage(Messages.userID)}: {userId.length > 19 ? `${userId.slice(0, 19)}...` : userId}
+        </Text>
+        <Button
+          variant="tertiary"
+          onClick={handleCopy}
+          stretch={false}
+          icon={() => <CopyIcon />}
+          >
+          {copied ? "Copied UID" : "Copy UID"}
+        </Button>
+        </Rows>
+        </Box>
     </Rows>
   );
 };

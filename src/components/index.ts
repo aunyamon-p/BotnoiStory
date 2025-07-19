@@ -8,3 +8,4 @@ export * from "./remaining_credits";
 export * from "./StoryLengthSelector";
 export * from "./character";
 export * from "./script_viewer";
+export * from "./SelectSpeaker";
