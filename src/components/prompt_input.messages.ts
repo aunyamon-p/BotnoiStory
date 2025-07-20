@@ -8,7 +8,7 @@ export const PromptInputMessages = defineMessages({
       "Button label to generate an example moral lesson to inspire the user",
   },
   promptTryAnother: {
-    defaultMessage: "Try another",
+    defaultMessage: "Inspire again",
     description: "Button label to generate a different example moral lesson",
   },
 });

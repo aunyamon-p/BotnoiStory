@@ -1,5 +1,5 @@
 import { Home } from "src/home";
-import { ErrorPage, GeneratePage, ResultsPage } from "src/pages";
+import { CreateStoryPage, ErrorPage, ResultsPage } from "src/pages";
 
 export enum Paths {
   HOME = "/",
@@ -14,13 +14,12 @@ export const routes = [
     children: [
       {
         index: true,
-        element: <GeneratePage />,
+        element: <CreateStoryPage />,
       },
       {
         path: Paths.RESULTS,
         element: <ResultsPage />,
       },
-      // @TODO: Add additional pages and routes as needed.
     ],
   },
 ];
