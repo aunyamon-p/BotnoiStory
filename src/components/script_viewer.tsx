@@ -18,7 +18,6 @@ interface ScriptViewerProps {
   onScriptChange?: (script: string) => void;
 }
 
-
 export const ScriptViewer = ({
   onBackToEdit,
   initialScript = "",
@@ -36,7 +35,7 @@ export const ScriptViewer = ({
   };
 
   return (
-    <Box padding="0">
+    <Rows spacing="1u">
       <Button
         alignment="start"
         variant="tertiary"
@@ -77,6 +76,6 @@ export const ScriptViewer = ({
           />
         )}
       />
-    </Box>
+    </Rows>
   );
 };

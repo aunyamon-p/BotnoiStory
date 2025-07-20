@@ -8,6 +8,7 @@ import {
   TrashIcon,
   MultilineInput,
   FormField,
+  SegmentedControl
 } from "@canva/app-ui-kit";
 import { useIntl } from "react-intl";
 import * as styles from "styles/components.css";
@@ -24,6 +25,7 @@ const toOrdinalText = (n: number): string => {
 
 export const CharacterSection = () => {
   const intl = useIntl();
+  const [mode, setMode] = useState<"random" | "custom">("random");
   const [characters, setCharacters] = useState<string[]>([""]);
 
   const addCharacter = () => {
@@ -41,7 +43,23 @@ export const CharacterSection = () => {
   };
 
   return (
-    <Rows spacing="2u">
+    <Rows spacing="1u">
+      <FormField
+        label="Character"
+        control={() => (
+          <SegmentedControl
+            value={mode}
+            onChange={(val) => setMode(val as "random" | "custom")}
+            options={[
+              { value: 'random', label: 'Random' },
+              { value: 'custom', label: 'Custom' }
+            ]}
+            
+          />
+        )}
+      />
+      {mode === "custom" && (
+        <Rows spacing="2u">
       {characters.map((char, index) => (
         <div key={index}>
           <Box
@@ -103,6 +121,8 @@ export const CharacterSection = () => {
           description: "Button to add new character",
         })}
       </Button>
+      </Rows>
+      )}
     </Rows>
   );
 };

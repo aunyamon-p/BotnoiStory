@@ -6,6 +6,7 @@ import {
   FormField,
   MultilineInput,
   Text,
+  ReloadIcon
 } from "@canva/app-ui-kit";
 import { useAppContext } from "src/context";
 import { Paths } from "src/routes";
@@ -86,7 +87,11 @@ export const PromptInput = () => {
 
   const InspireMeButton = () => {
     return (
-      <Button variant="secondary" onClick={onInspireClick}>
+      <Button 
+      variant="secondary" 
+      onClick={onInspireClick}
+      icon={hasUsedInspire ? () => <ReloadIcon /> : undefined}
+      >
         {hasUsedInspire
           ? intl.formatMessage(Messages.promptTryAnother)
           : intl.formatMessage(Messages.promptInspireMe)}
@@ -100,7 +105,10 @@ export const PromptInput = () => {
   };
 
   const ClearButton = () => (
-    <Button variant="tertiary" onClick={onClearClick} >
+    <Button 
+    variant="tertiary" 
+    onClick={onClearClick} 
+    >
       {intl.formatMessage({
         defaultMessage: "Clear",
         description:
@@ -141,7 +149,7 @@ export const PromptInput = () => {
 
               {/* Right: counter above Clear button */}
               <Box display="flex" flexDirection="column" alignItems="end">
-                <Box paddingBottom="0.5u">
+                <Box paddingBottom="0.5u" paddingEnd="2u">
                   <Text size="small">
                     {promptInput.length}/{MAX_INPUT_LENGTH}
                   </Text>

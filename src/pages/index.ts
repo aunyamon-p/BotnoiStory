@@ -3,5 +3,5 @@
 //เช่น import { showError, startGeneration, displayResults } from "./utils";
 
 export * from "./error";
-export * from "./generate";
+export * from "./createStory";
 export * from "./results";
