@@ -7,6 +7,8 @@ import {
   PromptInput,
   CharacterSection,
   StoryLengthSelector,
+  AudienceAgeSelect,
+  FormatStyleSelect
 } from "src/components";
 
 export const CreateStoryPage = () => {
@@ -28,18 +30,22 @@ export const CreateStoryPage = () => {
     navigate("/results");
   };
   
-
   const handleReset = () => {
     setPromptInput("");
     setSelectedLength("30s");
     setSelectedLanguage("Thai");
   };
 
+  const [audienceAge, setAudienceAge] = useState("3-7");
+  const [formatStyle, setFormatStyle] = useState("Conversation");
+
   return (
     <Box paddingTop="1u">
       <Rows spacing="2u">
         <AppError />
         <PromptInput />
+        <FormatStyleSelect value={formatStyle} onChange={setFormatStyle} />
+        <AudienceAgeSelect value={audienceAge} onChange={setAudienceAge} />
         <CharacterSection />
         <StoryLengthSelector
           onLengthSelect={handleLengthSelect}
