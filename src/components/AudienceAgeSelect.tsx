@@ -15,7 +15,7 @@ export const AudienceAgeSelect = ({ value, onChange }: AudienceAgeSelectProps) =
 
   return (
     <Rows spacing="1u">
-      <Text size="medium">Audience age</Text>
+      <Text size="medium" variant="bold">Audience age</Text>
       <Select
         value={value}
         options={options}
