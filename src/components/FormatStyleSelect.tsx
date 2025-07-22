@@ -15,7 +15,7 @@ export const FormatStyleSelect = ({ value, onChange }: FormatStyleSelectProps) =
 
   return (
   <Rows spacing="1u">
-      <Text size="medium">
+      <Text size="medium" variant="bold">
         Format style
       </Text>
       <div style={{ width: "100%" }}>
